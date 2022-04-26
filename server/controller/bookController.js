@@ -16,21 +16,21 @@ exports.create = (req, res) => {
         publishYear: req.body.publishYear,
         price: req.body.price,
         pages: req.body.pages,
-        category: req.body.category
+        category: req.body.category,
+        // user: req.body.user
         
     })
 
     book.save(book).then(data => {
         // console.log(data._id);
-        id = req.body.category
+        category_id = req.body.category
+        // user_id = req.body.user
         res.send(data)
-        return BooksCategorydb.findByIdAndUpdate(id, {
+        return BooksCategorydb.findByIdAndUpdate(category_id, {
             $push: {
                 books: data._id
             }
         }, { new: true, useFindAndModify: false })
-      
-        
 
     })
     .catch(err => {
@@ -49,6 +49,7 @@ exports.find = (req, res) => {
 
         const id = req.query.id;
         Booksdb.findById(id)
+        .populate("category")
         .then(data => {
             if(!data){
                 res.status(404).send({message: `Not found book with id${id}`})
@@ -64,6 +65,7 @@ exports.find = (req, res) => {
     }else{
        
         Booksdb.find()
+        .populate("category")
         .then(user => {
             res.send(user)
         })

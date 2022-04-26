@@ -19,12 +19,14 @@ route.post('/login',  userController.login)
 route.post('/books',auth, bookController.create)
 route.put('/books/:id', auth, bookController.update)
 route.delete('/books/:id', auth, bookController.delete)
+route.get('/books/', auth, bookController.find)
 
 // Api Book category
 
 route.post('/bookcategory', auth, bookCategoryController.create)
 route.put('/bookcategory/:id', auth, bookCategoryController.update)
 route.delete('/bookcategory/:id', auth,  bookCategoryController.delete)
+route.get('/bookcategory/', auth, bookCategoryController.find)
 
 
 module.exports = route

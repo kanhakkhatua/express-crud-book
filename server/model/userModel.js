@@ -72,7 +72,13 @@ var schema = new mongoose.Schema({
             message: '{VALUE} is not supported'
           },
         default: 'user'
-    }
+    },
+    books:[
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "books"
+        }
+    ]
 
 })
 

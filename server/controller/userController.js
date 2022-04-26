@@ -32,15 +32,22 @@ exports.create = (req, res) => {
         gender: req.body.gender,
         maritialStatus: req.body.maritialStatus,
         userType: req.body.userType,
+        books: req.body.books
     })
 
-
-    // const token =user.generateAuthToken();
-
     user.save(user).then(data => {
-      
+        book = req.body.book
+        
         res.send(data)
-        // res.redirect('/')
+
+        if(book){
+            return Userdb.findByIdAndUpdate(data._id, {
+                    $push: {
+                        books: book
+                    }
+            }, { new: true, useFindAndModify: false })
+        }
+ 
     })
     .catch(err => {
         res.status(500).send(
@@ -62,6 +69,7 @@ exports.find = (req, res) => {
 
         const id = req.query.id;
         Userdb.findById(id)
+        .populate("books")
         .then(data => {
             if(!data){
                 res.status(404).send({message: `Not found user with id${id}`})
@@ -77,6 +85,7 @@ exports.find = (req, res) => {
     }else{
        
         Userdb.find()
+        .populate("books")
         .then(user => {
             res.send(user)
         })
@@ -93,15 +102,27 @@ exports.update = (req, res) => {
         .status(400)
         .send({message: "Data to update can't be empty"})
     }
-
     const id = req.params.id;
+
+    
+
+    
     Userdb.findByIdAndUpdate(id, req.body, {useFindandModify: false})
     .then(data => {
+        // console.log(data)
         if(!data){
             res.status(400).send({message: `Cannot Update user with ${id}, may be user not found !`})
 
         }else{
             res.send(data)
+            book = req.body.book
+            if(book){
+                return Userdb.findByIdAndUpdate(data._id, {
+                    $push: {
+                        books: book
+                    }
+                }, { new: true, useFindAndModify: false })
+            }
         }
     })
     .catch(err => {
