@@ -1,24 +1,20 @@
 const jwt = require("jsonwebtoken");
 
-const authToken = async(req, res, next) => {
-    try {
+const authToken = async (req, res, next) => {
+  let header = req.headers.authorization;
+  //   console.log(header);
+  const arr = header.split(" ");
+  // console.log(arr);
 
-        let header = req.headers.authorization;
-        const arr = header.split(" ")
+  if (!req.headers) {
+    res.status(500).send({ message: "Please Provide authorization" });
+  } else if (arr[0] != "Bearer") {
+    res.status(500).send({ message: "Please Provide data in Bearer format" });
+  }
 
-        if(!req.headers){
-            res.status(500).send({message: "Please Provide authorization"})
-        }
-        else if(arr[0] != 'Bearer'){
-            res.status(500).send({message: "Please Provide data in Bearer format"})
-        }
+  var decoded = jwt.verify(arr[1], process.env.PRIVATEKEY);
+  //   console.log(decoded)
 
-        var decoded = jwt.verify(arr[1], process.env.PRIVATEKEY);
-        // console.log(decoded) 
-        
-       next(); 
-    } catch (error) {
-        res.status(401).send(error)
-    }
-}
-module.exports = authToken
+  next();
+};
+module.exports = authToken;

@@ -58,38 +58,34 @@ exports.create = (req, res) => {
     });
 };
 
-exports.find = (req, res) => {
-  if (req.query.id) {
-    const id = req.query.id;
-    Userdb.findById(id)
-      .populate("books")
-      .then((data) => {
-        if (!data) {
-          res.status(404).send({ message: `Not found user with id${id}` });
-        } else {
-          res.send(data);
-        }
-      })
-      .catch((err) => {
-        res
-          .status(500)
-          .send({ message: "erroe retrieving user with id " + id });
+exports.finduser = (req, res) => {
+  // console.log(req);
+
+  Userdb.find({ userType: "user" })
+    .populate("books")
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Error Occurred while retriving user information",
       });
-  } else {
-    Userdb.find()
-      .populate("books")
-      .then((user) => {
-        res.send(user);
-      })
-      .catch((err) => {
-        res
-          .status(500)
-          .send({
-            message:
-              err.message || "Error Occurred while retriving user information",
-          });
+    });
+};
+
+exports.findadmin = (req, res) => {
+  Userdb.find({ userType: "admin" })
+    .populate("books")
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Error Occurred while retriving user information",
       });
-  }
+    });
 };
 
 exports.update = (req, res) => {
@@ -97,16 +93,15 @@ exports.update = (req, res) => {
     return res.status(400).send({ message: "Data to update can't be empty" });
   }
   const id = req.params.id;
+  // console.log(id);
 
   Userdb.findByIdAndUpdate(id, req.body, { useFindandModify: false })
     .then((data) => {
-      // console.log(data)
+      // console.log(data);
       if (!data) {
-        res
-          .status(400)
-          .send({
-            message: `Cannot Update user with ${id}, may be user not found !`,
-          });
+        res.status(400).send({
+          message: `Cannot Update user with ${id}, may be user not found !`,
+        });
       } else {
         res.send(data);
         book = req.body.book;
@@ -124,7 +119,7 @@ exports.update = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: "Error Update user information" });
+      res.status(500).send({ message: "Error Update user information" + err });
     });
 };
 
@@ -133,12 +128,11 @@ exports.delete = (req, res) => {
 
   Userdb.findByIdAndDelete(id)
     .then((data) => {
+      console.log(data);
       if (!data) {
-        res
-          .status(400)
-          .send({
-            message: `Can not delete with id ${id}, may be id is wrong`,
-          });
+        res.status(400).send({
+          message: `Can not delete with id ${id}, may be id is wrong`,
+        });
       } else {
         res.send({
           message: "User was deleted Successfully !",
@@ -147,7 +141,7 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: `Could not delete user with id=${id}`,
+        message: `Could not delete user with id=${id}, Error > ${err}`,
       });
     });
 };
