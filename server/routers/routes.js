@@ -14,6 +14,9 @@ route.get("/users/", auth, userController.finduser);
 route.get("/admins/", auth, userController.findadmin);
 
 route.put("/users/:id", auth, userController.update);
+
+route.put("/users/books/:id", userController.updatebook);
+
 route.delete("/users/:id", auth, userController.delete);
 route.post("/login", userController.login);
 

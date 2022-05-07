@@ -5,20 +5,20 @@ const mongoose = require("mongoose");
 var schema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, "First name Required"],
+    // required: [true, "First name Required"],
   },
   lastName: {
     type: String,
-    required: [true, "Last name Required"],
+    // required: [true, "Last name Required"],
   },
   email: {
     type: String,
-    required: [true, "E-mail Required"],
+    // required: [true, "E-mail Required"],
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "Password Required"],
+    // required: [true, "Password Required"],
   },
   address: {
     type: String,
@@ -37,12 +37,12 @@ var schema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: [true, "Phone Number Required"],
+    // required: [true, "Phone Number Required"],
     unique: true,
   },
   adhaar: {
     type: String,
-    required: [true, "Adhaar Number Required"],
+    // required: [true, "Adhaar Number Required"],
     unique: true,
   },
   gender: {
